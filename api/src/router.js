@@ -6,7 +6,10 @@ import rp from "request-promise";
 //import Report from "./models/report";
 const currentDate = new Date();
 const time = require("../lib/functions/time");
-console.log(time.yyyymmdd() - 1)
+console.log(time.yyyymmdd());
+
+var allNBATeams = [];
+var activatedGames = [];
 
 var scoreBoard = {
     uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
@@ -90,7 +93,7 @@ class AppRouter{
 
     setupRouters(){
         const app = this.app;
-        //const db = app.get("db");
+        const db = app.get("db");
 
         //Returns today's scoreboard
         app.get("/scoreboard", (req, res) => {

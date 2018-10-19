@@ -3,6 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.connect = void 0;
+
 //err.stack - shows error message.
 //connection.threadId - threadId for the mysql connection.
 var mysql = require("mysql");
@@ -14,12 +16,15 @@ var connection = mysql.createConnection({
   database: "nbatest"
 });
 
-var connect = exports.connect = function connect(callback) {
+var connect = function connect(callback) {
   connection.connect(function (err) {
     if (err) {
-      console.error("Error 001: There was an error connecting to the database. \n" + err.stack);
+      console.error("Error 001: There was an error connecting to the database. \n".concat(err.stack));
       return;
     }
+
     return callback(connection);
   });
 };
+
+exports.connect = connect;
