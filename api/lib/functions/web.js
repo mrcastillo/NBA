@@ -1,22 +1,21 @@
-const request = require("request");
+"use strict";
+
+var request = require("request");
 
 module.exports = {
-  getRequest : function(uri){
-    return new Promise((resolve, reject) => {
-    request({
-      method : "GET",
-      json : true,
-      uri : uri
-    }, (error, response, body) => {
-        if(!error && response.statusCode == 200){
+  getRequest: function getRequest(uri) {
+    return new Promise(function (resolve, reject) {
+      request({
+        method: "GET",
+        json: true,
+        uri: uri
+      }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
           resolve(body);
-        }
-        else{
+        } else {
           reject(error);
         }
       });
     });
   }
-}
-
-
+};

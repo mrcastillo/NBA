@@ -5,26 +5,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.connect = void 0;
 
-var Sequelize = require('sequelize');
+require("reflect-metadata");
 
-var sequelize = new Sequelize('mysql_database', 'acastillo', 'Appsteam3$', {
-  host: 'localhost',
-  dialect: 'mysql',
-  operatorsAliases: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+var _typeorm = require("typeorm");
 
 var connect = function connect(callback) {
-  sequelize.authenticate().then(function () {
-    callback(sequelize);
-  }).catch(function (err) {
-    console.error("Error 001: There was an error connecting to the database. \n".concat(err));
-    return;
+  var connection = (0, _typeorm.createConnection)({
+    type: "mysql",
+    host: "localhost",
+    port: 3306,
+    username: "nbadeveloper",
+    password: "846043ant;",
+    database: "nbatest",
+    entities: [__dirname + "./entities/*.js"],
+    synchronize: true,
+    logging: false
+  }).then(function (connection) {
+    if (connection.isConnected) {
+      callback(connection);
+    }
+  }).catch(function (error) {
+    callback(error);
   });
 };
 

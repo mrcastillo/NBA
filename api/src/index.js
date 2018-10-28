@@ -7,7 +7,7 @@ import path from "path";
 import cors from "cors";
 
 import AppRouter from "./router";
-import { connect } from "./database";
+import { connect } from "./db";
 
 //file storage config
 const storageDir = path.join(__dirname, "..", "storage");
@@ -50,9 +50,10 @@ app.server.listen(process.env.PORT || PORT, function() {
 });
 */
 
+
 connect((connection) => {
     //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
-    //app.db = connection;
+    app.db = connection;
     app.set("db", connection);
 
     //init router
@@ -60,6 +61,5 @@ connect((connection) => {
 
     app.server.listen(process.env.PORT || PORT, function () {
         console.log("App is running on port " + app.server.address().port);
-        console.log(`Database has started`);
     });
-});
+})

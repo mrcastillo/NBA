@@ -13,7 +13,7 @@ export const connect = (callback) => {
 	connection.connect((err) => {
 		if(err){
             console.error(`Error 001: There was an error connecting to the database. \n${err.stack}`);
-            return;
+            return callback(err);
 		}
 		return callback(connection);
 	});

@@ -1,25 +1,26 @@
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql_database', 'acastillo', 'Appsteam3$', {
-    host: 'localhost',
-    dialect: 'mysql',
-    operatorsAliases: false,
-
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-});
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 
 export const connect = (callback) => {
-    sequelize
-    .authenticate()
-    .then(() => {
-        callback(sequelize);
+    const connection = createConnection({
+        type: "mysql",
+        host: "localhost",
+        port: 3306,
+        username: "nbadeveloper",
+        password: "846043ant;",
+        database: "nbatest",
+        entities: [
+            __dirname + "./entities/*.js"
+        ],
+        synchronize: true,
+        logging: false
     })
-    .catch( err => {
-        console.error(`Error 001: There was an error connecting to the database. \n${err}`);
-        return;
+    .then((connection) => {
+        if(connection.isConnected){
+            callback(connection);
+        }
     })
+    .catch((error) => {
+        callback(error);
+    });
 }

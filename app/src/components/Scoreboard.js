@@ -15,6 +15,9 @@ class ScoreBoard extends React.Component{
     
     componentDidMount() {
         this.getScoreboard();
+        var interval = 4000;
+        setInterval(this.getScoreboard, interval);
+        interval = 3000;
     }
 
     getScoreboard() {

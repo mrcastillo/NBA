@@ -35,8 +35,8 @@ class Teams extends React.Component{
 
             this.setState({
                 teams: element
-            })
-        })
+            });
+        });
     }
     render(){
         return(

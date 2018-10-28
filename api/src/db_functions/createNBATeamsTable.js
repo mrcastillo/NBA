@@ -1,6 +1,10 @@
-const mysql = require("mysql");
-const axios = require("axios");
-const _ = require("lodash");
+import mysql from "mysql";
+import axios from "axios";
+import _ from "lodash";
+import { AppRouter } from "../router";
+
+
+console.log(AppRouter);
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -91,9 +95,6 @@ function createNBATeamsTable() {
                             nbaTeamsPopulateQuery += `); `;
                         });
 
-
-                        //console.log(nbaTeamsPopulateQuery);
-
                         //Create a prepared query, "??" will be populated by an array full of column names.
                         var nbaTeamsTableQuery = `CREATE TABLE nba_teams
                         (
@@ -107,12 +108,14 @@ function createNBATeamsTable() {
                             ?? VARCHAR(20),
                             ?? VARCHAR(20),
                             ?? VARCHAR(12),
-                            ?? VARCHAR(20)
+                            ?? VARCHAR(20),
+                            KEY(teamId)
                         );`;
 
                         connection.query(nbaTeamsTableQuery, teamColumnNames, (error, result, fields) => {
                             if (error) {
-                                console.error(`There was an error creating the nba_teams table.\n${error}`)
+                                console.error(`There was an error creating the nba_teams table.\n${error}`);
+                                connection.end();
                             }
                             else {
                                 console.log(`Created nba_teams table in mysql DB.`);
@@ -135,7 +138,7 @@ function createNBATeamsTable() {
                         connection.end();
                     }
                 }
-                )
+            )
         }
         else {
             console.log(`Found nba_teams table in database.\nPlease remove nba_teams table and rerun script.`);
@@ -143,7 +146,6 @@ function createNBATeamsTable() {
         }
     });
 }
-
 
 //populateTeamsTable()
 createNBATeamsTable();

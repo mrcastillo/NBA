@@ -20,7 +20,7 @@ var connect = function connect(callback) {
   connection.connect(function (err) {
     if (err) {
       console.error("Error 001: There was an error connecting to the database. \n".concat(err.stack));
-      return;
+      return callback(err);
     }
 
     return callback(connection);

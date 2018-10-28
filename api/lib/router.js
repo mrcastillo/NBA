@@ -11,8 +11,6 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _path = _interopRequireDefault(require("path"));
-
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _requestPromise = _interopRequireDefault(require("request-promise"));
@@ -114,6 +112,11 @@ function () {
         }).catch(function (err) {
           res.send("There was an error with scoreboard..\n ".concat(err));
           res.end();
+        });
+      });
+      app.post("/scoreboard", function (req, res) {
+        res.json({
+          welcome: "Hello!"
         });
       }); //Returns all NBA Teams
 

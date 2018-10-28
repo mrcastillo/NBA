@@ -1,18 +1,25 @@
 "use strict";
 
-var mysql = require("mysql");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var axios = require("axios");
+var _mysql = _interopRequireDefault(require("mysql"));
 
-var _ = require("lodash");
+var _axios = _interopRequireDefault(require("axios"));
 
-var connection = mysql.createConnection({
+var _lodash = _interopRequireDefault(require("lodash"));
+
+var _router = require("../router");
+
+console.log(_router.AppRouter);
+
+var connection = _mysql.default.createConnection({
   host: "localhost",
   user: "nbadeveloper",
   password: "846043ant;",
   database: "nbatest",
   multipleStatements: true
 });
+
 connection.connect(function (err) {
   if (err) {
     console.error("Create NBA Teams - Error w/ connection!");
@@ -42,7 +49,7 @@ function createNBATeamsTable() {
       console.log("Warning: Did not find nba_teams table in database.\nCreating new table...."); //Nest 1: API Connection
       //Now that we know that no table exist, connect to the API.
 
-      axios.get("http://localhost:8181/teams").then(function (teams) {
+      _axios.default.get("http://localhost:8181/teams").then(function (teams) {
         //If we get a 200 status connection, proceed.
         if (teams.status === 200) {
           //Populate our previously declared nbaTeams variable with an array of teams.
@@ -58,10 +65,10 @@ function createNBATeamsTable() {
 
           var nbaTeamsPopulateQuery = "";
 
-          _.each(nbaTeams, function (team) {
+          _lodash.default.each(nbaTeams, function (team) {
             nbaTeamsPopulateQuery += "INSERT INTO nba_teams (";
 
-            _.each(teamColumnNames, function (columnName) {
+            _lodash.default.each(teamColumnNames, function (columnName) {
               if (columnName === nbaTeamsTableLastColumnName) {
                 nbaTeamsPopulateQuery += "".concat(columnName);
                 nbaTeamsPopulateQuery += ") VALUES (";
@@ -82,14 +89,14 @@ function createNBATeamsTable() {
             nbaTeamsPopulateQuery += "'".concat(team.confName, "', ");
             nbaTeamsPopulateQuery += "'".concat(team.divName, "'");
             nbaTeamsPopulateQuery += "); ";
-          }); //console.log(nbaTeamsPopulateQuery);
-          //Create a prepared query, "??" will be populated by an array full of column names.
+          }); //Create a prepared query, "??" will be populated by an array full of column names.
 
 
-          var nbaTeamsTableQuery = "CREATE TABLE nba_teams\n                        (\n                            ?? BOOL,\n                            ?? BOOL,\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(4),\n                            ?? INT,\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(12),\n                            ?? VARCHAR(20)\n                        );";
+          var nbaTeamsTableQuery = "CREATE TABLE nba_teams\n                        (\n                            ?? BOOL,\n                            ?? BOOL,\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(4),\n                            ?? INT,\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(12),\n                            ?? VARCHAR(20),\n                            KEY(teamId)\n                        );";
           connection.query(nbaTeamsTableQuery, teamColumnNames, function (error, result, fields) {
             if (error) {
               console.error("There was an error creating the nba_teams table.\n".concat(error));
+              connection.end();
             } else {
               console.log("Created nba_teams table in mysql DB.");
               connection.query(nbaTeamsPopulateQuery, function (error, result, fields) {
