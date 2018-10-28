@@ -18,7 +18,7 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _router = _interopRequireDefault(require("./router"));
 
-var _db = require("./db");
+var _database = require("./database");
 
 //file storage config
 var storageDir = _path.default.join(__dirname, "..", "storage");
@@ -56,7 +56,7 @@ app.server.listen(process.env.PORT || PORT, function() {
 });
 */
 
-(0, _db.connect)(function (connection) {
+(0, _database.connect)(function (connection) {
   //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
   app.db = connection;
   app.set("db", connection); //init router

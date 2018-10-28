@@ -7,7 +7,7 @@ import path from "path";
 import cors from "cors";
 
 import AppRouter from "./router";
-import { connect } from "./db";
+import { connect } from "./database";
 
 //file storage config
 const storageDir = path.join(__dirname, "..", "storage");

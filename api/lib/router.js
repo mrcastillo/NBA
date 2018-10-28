@@ -113,11 +113,6 @@ function () {
           res.send("There was an error with scoreboard..\n ".concat(err));
           res.end();
         });
-      });
-      app.post("/scoreboard", function (req, res) {
-        res.json({
-          welcome: "Hello!"
-        });
       }); //Returns all NBA Teams
 
       app.get("/teams", function (req, res) {

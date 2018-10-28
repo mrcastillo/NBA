@@ -1,6 +1,7 @@
 import path from "path";
 import _ from "lodash";
 import rp from "request-promise";
+import { nbaTeams } from "./entities/nbaTeams";
 
 
 //import Report from "./models/report";
@@ -107,12 +108,6 @@ class AppRouter{
             .catch((err) => {
                 res.send(`There was an error with scoreboard..\n ${err}`);
                 res.end();
-            })
-        });
-
-        app.post("/scoreboard", (req, res) => {
-            res.json({
-                welcome: "Hello!"
             })
         });
 
