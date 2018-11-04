@@ -56,10 +56,21 @@ connect((connection) => {
     app.db = connection;
     app.set("db", connection);
 
-    //init router
-    new AppRouter(app);
+    connection.query("SELECT * from nba_teams", (err, teams) => {
+        if(err){
+            console.error(`Error setting nba_teams obj. Maybe run createNBATeamsTable script or create nba_teams table.\n` + err);
+        };
+        //This object will alwyas return our NBAteams.
+        app.nbaTeams = teams;
+        app.set("nbaTeams", teams);
 
-    app.server.listen(process.env.PORT || PORT, function () {
-        console.log("App is running on port " + app.server.address().port);
+        //init router
+        new AppRouter(app);
+        
+        app.server.listen(process.env.PORT || PORT, function () {
+            console.log("App is running on port " + app.server.address().port);
+        });
     });
 })
+
+export default app;

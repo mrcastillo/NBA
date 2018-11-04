@@ -90,7 +90,7 @@ function createNBATeamsTable() {
                             nbaTeamsPopulateQuery += `'${team.divName}'`;
                             nbaTeamsPopulateQuery += `); `;
                         });
-
+                        console.log(nbaTeamsPopulateQuery)
                         //Create a prepared query, "??" will be populated by an array full of column names.
                         var nbaTeamsTableQuery = `CREATE TABLE nba_teams
                         (

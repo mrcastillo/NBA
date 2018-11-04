@@ -8,10 +8,6 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
-var _router = require("../router");
-
-console.log(_router.AppRouter);
-
 var connection = _mysql.default.createConnection({
   host: "localhost",
   user: "nbadeveloper",

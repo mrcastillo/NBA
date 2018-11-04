@@ -2,28 +2,42 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.createNBATeamsTable = createNBATeamsTable;
+var _mysql = _interopRequireDefault(require("mysql"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
+var connection = _mysql.default.createConnection({
+  host: "localhost",
+  user: "nbadeveloper",
+  password: "846043ant;",
+  database: "nbatest",
+  multipleStatements: true
+});
+
+connection.connect(function (err) {
+  if (err) {
+    console.error("Create NBA Teams - Error w/ connection!");
+    throw err;
+  }
+
+  console.log("Create NBA Teams - Made successful connection to DB.");
+});
 /* 1. See if the table is already created, if the table is not created, then create the table.
 *   2. Send API request to teams route, this will get information for all standard NBA teams.
 *
 *
 */
 //Will be populated by createNBATeamsTable in Nest 1
+
 var nbaTeams;
 /* Creates a MYSQL Table that will display all of the 30 standard regular NBA Teams.
  * Knicks, Bulls, Lakers, Magic, Hawks, Celtics, Suns, Pelicans, Thunder, Kings, Warriors, etc..
  * Nest 1: Connect to API to gather information on NBA teams. Alternative: Connect to data.nba.net and get data from there.
  */
 
-function createNBATeamsTable(connection) {
+function createNBATeamsTable() {
   //Check to see if table exist, if it does not, run the script, if it does, do not run script.
   connection.query("SELECT 1 FROM nba_teams LIMIT 1", function (err, result, fields) {
     if (err) {
@@ -71,8 +85,9 @@ function createNBATeamsTable(connection) {
             nbaTeamsPopulateQuery += "'".concat(team.confName, "', ");
             nbaTeamsPopulateQuery += "'".concat(team.divName, "'");
             nbaTeamsPopulateQuery += "); ";
-          }); //Create a prepared query, "??" will be populated by an array full of column names.
+          });
 
+          console.log(nbaTeamsPopulateQuery); //Create a prepared query, "??" will be populated by an array full of column names.
 
           var nbaTeamsTableQuery = "CREATE TABLE nba_teams\n                        (\n                            ?? BOOL,\n                            ?? BOOL,\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(60),\n                            ?? VARCHAR(4),\n                            ?? INT,\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(20),\n                            ?? VARCHAR(12),\n                            ?? VARCHAR(20),\n                            KEY(teamId)\n                        );";
           connection.query(nbaTeamsTableQuery, teamColumnNames, function (error, result, fields) {
@@ -103,4 +118,7 @@ function createNBATeamsTable(connection) {
       connection.end();
     }
   });
-}
+} //populateTeamsTable()
+
+
+createNBATeamsTable();

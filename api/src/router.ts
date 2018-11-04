@@ -1,8 +1,8 @@
 import path from "path";
 import _ from "lodash";
 import rp from "request-promise";
-import { nbaTeams } from "./entities/nbaTeams";
 
+import { populateNBATeamsTable } from "./db_helpers/createNBATeamsTable.1";
 
 //import Report from "./models/report";
 const currentDate = new Date();
@@ -96,6 +96,30 @@ class AppRouter{
         const app = this.app;
         const db = app.get("db");
 
+        app.post("/createNBATeamsTable", (req, res) => {
+            createNBATeamsTable(db)
+            .then((result) => {
+                res.send(result);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            })
+        });
+
+        app.post("/populateNBATeamsTable", (req, res) => {
+            populateNBATeamsTable(db)
+            .then((result) => {
+                res.send(result);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            });
+        });
+        
         //Returns today's scoreboard
         app.get("/scoreboard", (req, res) => {
             rp(scoreBoard)

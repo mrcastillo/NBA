@@ -15,6 +15,8 @@ var _lodash = _interopRequireDefault(require("lodash"));
 
 var _requestPromise = _interopRequireDefault(require("request-promise"));
 
+var _createNBATeamsTable = require("./db_helpers/createNBATeamsTable.1");
+
 //import Report from "./models/report";
 var currentDate = new Date();
 
@@ -102,7 +104,25 @@ function () {
     key: "setupRouters",
     value: function setupRouters() {
       var app = this.app;
-      var db = app.get("db"); //Returns today's scoreboard
+      var db = app.get("db");
+      app.post("/createNBATeamsTable", function (req, res) {
+        createNBATeamsTable(db).then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
+      });
+      app.post("/populateNBATeamsTable", function (req, res) {
+        (0, _createNBATeamsTable.populateNBATeamsTable)(db).then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
+      }); //Returns today's scoreboard
 
       app.get("/scoreboard", function (req, res) {
         (0, _requestPromise.default)(scoreBoard).then(function (result) {

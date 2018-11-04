@@ -2,6 +2,11 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _http = _interopRequireDefault(require("http"));
 
 var _express = _interopRequireDefault(require("express"));
@@ -59,10 +64,22 @@ app.server.listen(process.env.PORT || PORT, function() {
 (0, _database.connect)(function (connection) {
   //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
   app.db = connection;
-  app.set("db", connection); //init router
+  app.set("db", connection);
+  connection.query("SELECT * from nba_teams", function (err, teams) {
+    if (err) {
+      console.error("Error setting nba_teams obj. Maybe run createNBATeamsTable script or create nba_teams table.\n" + err);
+    }
 
-  new _router.default(app);
-  app.server.listen(process.env.PORT || PORT, function () {
-    console.log("App is running on port " + app.server.address().port);
+    ; //This object will alwyas return our NBAteams.
+
+    app.nbaTeams = teams;
+    app.set("nbaTeams", teams); //init router
+
+    new _router.default(app);
+    app.server.listen(process.env.PORT || PORT, function () {
+      console.log("App is running on port " + app.server.address().port);
+    });
   });
 });
+var _default = app;
+exports.default = _default;
