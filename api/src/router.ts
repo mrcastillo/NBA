@@ -2,7 +2,10 @@ import path from "path";
 import _ from "lodash";
 import rp from "request-promise";
 
-import { populateNBATeamsTable } from "./db_helpers/createNBATeamsTable.1";
+//import { createNBATeamsTable, populateNBATeamsTable} from "./NBATeams";
+
+import { NBAteams } from "./NBATeams";
+let nbaTeams = new NBAteams();
 
 //import Report from "./models/report";
 const currentDate = new Date();
@@ -95,6 +98,15 @@ class AppRouter{
     setupRouters(){
         const app = this.app;
         const db = app.get("db");
+
+        app.get("/test", (req, res) => {
+            nbaTeams.populateNBATeamsTable(db, (err, result) => {
+                if(err) console.error(err);
+                console.log(result);
+            });
+
+            res.end();
+        });
 
         app.post("/createNBATeamsTable", (req, res) => {
             createNBATeamsTable(db)

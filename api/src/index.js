@@ -7,7 +7,8 @@ import path from "path";
 import cors from "cors";
 
 import AppRouter from "./router";
-import { connect } from "./database";
+//import { connect } from "./database";
+const knex = require('./knex/knex.js');
 
 //file storage config
 const storageDir = path.join(__dirname, "..", "storage");
@@ -40,17 +41,17 @@ app.use(bodyParser.json({
 app.set("root", __dirname);
 app.set("storageDir", storageDir);
 
+app.db = knex;
+app.set("db", knex);
 
-/*
 new AppRouter(app);
 
-app.server.listen(process.env.PORT || PORT, function() {
+app.server.listen(process.env.PORT || PORT, function () {
     console.log("App is running on port " + app.server.address().port);
-    console.log(`Database has started`);
 });
-*/
 
 
+/*
 connect((connection) => {
     //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
     app.db = connection;
@@ -72,5 +73,5 @@ connect((connection) => {
         });
     });
 })
-
+*/
 export default app;
