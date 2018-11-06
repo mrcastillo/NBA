@@ -18,8 +18,7 @@ var _requestPromise = _interopRequireDefault(require("request-promise"));
 var _NBATeams = require("./NBATeams");
 
 //import { createNBATeamsTable, populateNBATeamsTable} from "./NBATeams";
-var nbaTeams = new _NBATeams.NBAteams(); //import Report from "./models/report";
-
+//import Report from "./models/report";
 var currentDate = new Date();
 
 var time = require("../lib/functions/time");
@@ -107,11 +106,9 @@ function () {
     value: function setupRouters() {
       var app = this.app;
       var db = app.get("db");
+      var nbaTeams = new _NBATeams.NBAteams(db);
       app.get("/test", function (req, res) {
-        nbaTeams.populateNBATeamsTable(db, function (err, result) {
-          if (err) console.error(err);
-          console.log(result);
-        });
+        nbaTeams.populateNBATeamsTable();
         res.end();
       });
       app.post("/createNBATeamsTable", function (req, res) {

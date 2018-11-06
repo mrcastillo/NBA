@@ -5,7 +5,6 @@ import rp from "request-promise";
 //import { createNBATeamsTable, populateNBATeamsTable} from "./NBATeams";
 
 import { NBAteams } from "./NBATeams";
-let nbaTeams = new NBAteams();
 
 //import Report from "./models/report";
 const currentDate = new Date();
@@ -98,13 +97,11 @@ class AppRouter{
     setupRouters(){
         const app = this.app;
         const db = app.get("db");
+        
+        var nbaTeams = new NBAteams(db);
 
         app.get("/test", (req, res) => {
-            nbaTeams.populateNBATeamsTable(db, (err, result) => {
-                if(err) console.error(err);
-                console.log(result);
-            });
-
+            nbaTeams.populateNBATeamsTable();
             res.end();
         });
 
