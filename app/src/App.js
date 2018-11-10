@@ -6,6 +6,7 @@ import './css/index.css';
 
 import Scoreboard from "./components/Scoreboard";
 import Teams from "./components/Teams";
+import { Grid, Row, Col } from "react-bootstrap";
 
 class App extends Component {
   constructor(props){
@@ -14,13 +15,16 @@ class App extends Component {
 
   render() {
     return (
-      <div className={"app-layout"}>
+      <Grid className={"app-layout"}>
 
-        <div className={"top-header"}>
-          <h1>NBA API</h1>
-          <h3>NBA Data - Development</h3>
-        </div>
-
+        {/*
+        <Row className={"top-header"}>
+          <Col xs={12}>
+            <h1>NBA API</h1>
+            <h3>NBA Data - Development</h3>
+          </Col>
+        </Row>
+        */}
         { /*
           <Scoreboard />
           
@@ -28,7 +32,7 @@ class App extends Component {
         <Scoreboard />
         <hr />
         <Teams />
-      </div>
+      </Grid>
     );
   }
 }

@@ -3,7 +3,6 @@ import _ from "lodash";
 
 const tableName = "nba_teams"
 
-
 export class NBAteams{
     constructor(db){
         this.db = db;
@@ -57,8 +56,61 @@ export class NBAteams{
         });
     }
 
-
     createAndPopulateNBATeams() {
-
+        return new Promise((resolve, reject) => {
+            this.createNBATeamsTable()
+            .then((result) => {
+                console.log(result);
+                this.populateNBATeamsTable()
+                    .then((result) => {
+                        console.log(result);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    })
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        });
     }
+
+    getNBATeamByName(name) {
+        return new Promise((resolve, reject) => {
+            this.db(tableName)
+            .where({ "urlName": name })
+            .then((rows) => {
+                resolve(rows)
+            })
+            .catch((err) => {
+                reject(err);
+            })
+        });
+    }
+
+    getNBATeamByID(id) {
+        return new Promise((resolve, reject) => {
+            this.db(tableName)
+            .where({"teamId" : id})
+            .then((rows) => {
+                resolve(rows);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+        });
+    }
+
+    getIDByTeamName(name){
+        return new Promise((resolve, reject) => {
+            this.getNBATeamByName(name)
+            .then((row) => {
+                const teamId = row[0].teamId
+                resolve(teamId);
+            })
+            .catch((err) => {
+                reject(err);
+            })
+        });
+    };
 } 

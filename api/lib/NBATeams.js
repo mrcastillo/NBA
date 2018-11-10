@@ -75,7 +75,67 @@ function () {
     }
   }, {
     key: "createAndPopulateNBATeams",
-    value: function createAndPopulateNBATeams() {}
+    value: function createAndPopulateNBATeams() {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this3.createNBATeamsTable().then(function (result) {
+          console.log(result);
+
+          _this3.populateNBATeamsTable().then(function (result) {
+            console.log(result);
+          }).catch(function (err) {
+            console.error(err);
+          });
+        }).catch(function (err) {
+          console.error(err);
+        });
+      });
+    }
+  }, {
+    key: "getNBATeamByName",
+    value: function getNBATeamByName(name) {
+      var _this4 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this4.db(tableName).where({
+          "urlName": name
+        }).then(function (rows) {
+          resolve(rows);
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
+  }, {
+    key: "getNBATeamByID",
+    value: function getNBATeamByID(id) {
+      var _this5 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this5.db(tableName).where({
+          "teamId": id
+        }).then(function (rows) {
+          resolve(rows);
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
+  }, {
+    key: "getIDByTeamName",
+    value: function getIDByTeamName(name) {
+      var _this6 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this6.getNBATeamByName(name).then(function (row) {
+          var teamId = row[0].teamId;
+          resolve(teamId);
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
   }]);
   return NBAteams;
 }();

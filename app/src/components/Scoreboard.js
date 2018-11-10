@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import _ from "lodash";
 
+import { Row, Col} from "react-bootstrap";
+
 class ScoreBoard extends React.Component{
     constructor(props){
         super(props);
@@ -12,7 +14,7 @@ class ScoreBoard extends React.Component{
             scoreboard: []
         }
     }
-    
+
     componentDidMount() {
         this.getScoreboard();
         var interval = 4000;
@@ -32,11 +34,20 @@ class ScoreBoard extends React.Component{
 
                 _.each(scoreboard, (score, key) => {
                     gameDetailElements.push(
-                        <div className={"game"} key={key}>
-                            <p>{score.hTeam.triCode} vs {score.vTeam.triCode}</p>
-                            <p>{score.clock === "" ? "00:00" : score.clock}</p>
-                            <p>{score.hTeam.score} - {score.vTeam.score}</p>
-                        </div>
+                        <Col xs={6} className={"game"} key={key}>
+                            <div className={"game-top-section"}>
+                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.hTeam.triCode}.png`)} width="15%" height="15%"/>
+                                <p className={"game-team-score"}>{score.hTeam.score} - {score.vTeam.score}</p>
+                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.vTeam.triCode}.png`)} width="15%" height="15%" />
+                            </div>
+
+                            <div className={"game-mid-section"}>
+                                <p id={"game-clock"}>{score.clock === "" ? "00:00" : score.clock}</p>
+                                <p id={"game-team-tricode"}>{score.hTeam.triCode} {score.hTeam.win}-{score.hTeam.loss} - {score.vTeam.triCode} {score.vTeam.win}-{score.vTeam.loss}</p>
+                                <p className={"game-start-time"}>{score.startTimeEastern}</p>
+                                
+                            </div>
+                        </Col>
                     )
                 })
 
@@ -50,15 +61,18 @@ class ScoreBoard extends React.Component{
             }
 
         });
-    }
+    };
 
     render(){
         return(
-            <div className={"nba-game-container"}>
-                <p>Today's NBA Games</p>
-                <h1 onClick={this.getScoreboard}>Test</h1>
+            <Row className={"nba-game-container"}>
+                <Col xs={12}>
+                    <p className={"game-welcome"}>Today's NBA Games</p>
+                    {/*<h1 onClick={this.getScoreboard}>Test</h1>*/}
+                </Col>
+                
                 {this.state.scoreboard}
-            </div>
+            </Row>
         )
     }
 }

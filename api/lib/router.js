@@ -27,7 +27,8 @@ console.log(time.yyyymmdd());
 var allNBATeams = [];
 var activatedGames = [];
 var scoreBoard = {
-  uri: "https://data.nba.net/10s/prod/v1/".concat(time.yyyymmdd(), "/scoreboard.json"),
+  //uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
+  uri: "https://data.nba.net/10s/prod/v1/20181109/scoreboard.json",
   headers: {
     'User-Agent': "Request-Promise"
   },
@@ -108,24 +109,21 @@ function () {
       var db = app.get("db");
       var nbaTeams = new _NBATeams.NBAteams(db);
       app.get("/test", function (req, res) {
-        nbaTeams.populateNBATeamsTable();
+        nbaTeams.createAndPopulateNBATeams();
         res.end();
       });
-      app.post("/createNBATeamsTable", function (req, res) {
-        createNBATeamsTable(db).then(function (result) {
-          res.send(result);
+      app.post("/getNBATeam", function (req, res) {
+        nbaTeams.getNBATeamByName("knicks").then(function (team) {
+          res.send(team);
           res.end();
         }).catch(function (err) {
           res.send(err);
           res.end();
         });
       });
-      app.post("/populateNBATeamsTable", function (req, res) {
-        populateNBATeamsTable(db).then(function (result) {
-          res.send(result);
-          res.end();
-        }).catch(function (err) {
-          res.send(err);
+      app.post("/getNBATeamId", function (req, res) {
+        nbaTeams.getIDByTeamName("knicks").then(function (team) {
+          res.send(team);
           res.end();
         });
       }); //Returns today's scoreboard

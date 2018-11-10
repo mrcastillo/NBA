@@ -15,7 +15,8 @@ var allNBATeams = [];
 var activatedGames = [];
 
 var scoreBoard = {
-    uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
+    //uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
+    uri: `https://data.nba.net/10s/prod/v1/20181109/scoreboard.json`,
     headers: {
         'User-Agent': "Request-Promise"
     },
@@ -101,34 +102,29 @@ class AppRouter{
         var nbaTeams = new NBAteams(db);
 
         app.get("/test", (req, res) => {
-            nbaTeams.populateNBATeamsTable();
+            nbaTeams.createAndPopulateNBATeams();
             res.end();
         });
 
-        app.post("/createNBATeamsTable", (req, res) => {
-            createNBATeamsTable(db)
-            .then((result) => {
-                res.send(result);
+        app.post("/getNBATeam", (req, res) => {
+            nbaTeams.getNBATeamByName("knicks")
+            .then((team) => {
+                res.send(team);
                 res.end();
             })
             .catch((err) => {
                 res.send(err);
                 res.end();
             })
-        });
-
-        app.post("/populateNBATeamsTable", (req, res) => {
-            populateNBATeamsTable(db)
-            .then((result) => {
-                res.send(result);
-                res.end();
-            })
-            .catch((err) => {
-                res.send(err);
-                res.end();
-            });
         });
         
+        app.post("/getNBATeamId" , (req, res) => {
+            nbaTeams.getIDByTeamName("knicks")
+            .then((team) => {
+                res.send(team);
+                res.end();
+            })
+        });
         //Returns today's scoreboard
         app.get("/scoreboard", (req, res) => {
             rp(scoreBoard)
@@ -283,7 +279,7 @@ class AppRouter{
                 res.send(`There was an error with the nba last five game team stats routes... \n ${err}`);
                 res.end();
             })
-        }); 
+        });
     }
 }
 

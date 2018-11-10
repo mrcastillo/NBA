@@ -56,11 +56,9 @@ body {
   box-sizing: border-box; }
 
 .top-header {
-  background-color: #C9082A;
-  height: 180px;
-  padding-top: 50px;
-  text-align: center;
-  border-bottom: 1px solid black; }
+  height: 100px;
+  width: 100%;
+  text-align: center; }
   .top-header h1 {
     color: white;
     font-size: 36px;
@@ -73,8 +71,28 @@ body {
 
 .nba-game-container {
   color: white; }
+  .nba-game-container .game-welcome {
+    font-size: 24px;
+    text-align: center;
+    padding: 2em 0em 2em 0em;
+    border: .75px solid black; }
   .nba-game-container .game {
-    padding: .3em 0em .3em 0em; }
+    height: 150px;
+    border: .75px solid black; }
+    .nba-game-container .game .game-top-section {
+      width: 100%;
+      text-align: center;
+      margin: 0em 0em .7em 0em; }
+      .nba-game-container .game .game-top-section p {
+        font-size: 22px; }
+      .nba-game-container .game .game-top-section .game-team-logo {
+        display: inline-block; }
+      .nba-game-container .game .game-top-section .game-team-score {
+        display: inline-block; }
+    .nba-game-container .game .game-mid-section {
+      text-align: center; }
+      .nba-game-container .game .game-mid-section p {
+        font-size: 14px; }
 
 .nba-teams {
   color: white; }

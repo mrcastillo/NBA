@@ -17,68 +17,68 @@ const checkIfTableExistQuery = `SELECT 1 FROM nba_teams LIMIT 1`;
 export function populateNBATeamsTable(connection){
     return new Promise((resolve, reject) => {
         axios.get(`http://localhost:8181/teams`)
-            .then((teams) => {
-                if (teams.status === 200) {
-                    nbaTeams = teams.data;
+        .then((teams) => {
+            if (teams.status === 200) {
+                nbaTeams = teams.data;
 
-                    var teamColumnNames = Object.keys(nbaTeams[0]);
+                var teamColumnNames = Object.keys(nbaTeams[0]);
 
-                    //We need to know what is the name of the last column in our NBA teams Table
-                    //We use the teamColumnNames variable from before
-                    //Gets the last index of the teamColumnNames and returns the name of the last element in the array
-                    //We will use this for our query to know when to not add a comma "," to our query or mysql will return an error
-                    var nbaTeamsTableLastColumnName = teamColumnNames[
-                        teamColumnNames.lastIndexOf(
-                            teamColumnNames[
-                            teamColumnNames.length - 1
-                            ]
-                        )
-                    ];
+                //We need to know what is the name of the last column in our NBA teams Table
+                //We use the teamColumnNames variable from before
+                //Gets the last index of the teamColumnNames and returns the name of the last element in the array
+                //We will use this for our query to know when to not add a comma "," to our query or mysql will return an error
+                var nbaTeamsTableLastColumnName = teamColumnNames[
+                    teamColumnNames.lastIndexOf(
+                        teamColumnNames[
+                        teamColumnNames.length - 1
+                        ]
+                    )
+                ];
 
-                    //Start the query to populate and insert all 30 standard NBA teams
-                    var nbaTeamsPopulateQuery = ``;
+                //Start the query to populate and insert all 30 standard NBA teams
+                var nbaTeamsPopulateQuery = ``;
 
-                    _.each(nbaTeams, (team) => {
-                        nbaTeamsPopulateQuery += `INSERT INTO nba_teams (`
+                _.each(nbaTeams, (team) => {
+                    nbaTeamsPopulateQuery += `INSERT INTO nba_teams (`
 
-                        _.each(teamColumnNames, (columnName) => {
-                            if (columnName === nbaTeamsTableLastColumnName) {
-                                nbaTeamsPopulateQuery += `${columnName}`;
-                                nbaTeamsPopulateQuery += `) VALUES (`;
-                            }
-                            else {
-                                nbaTeamsPopulateQuery += `${columnName}, `;
-                            }
-                        });
-
-                        nbaTeamsPopulateQuery += `${team.isNBAFranchise}, `;
-                        nbaTeamsPopulateQuery += `${team.isAllStar}, `;
-                        nbaTeamsPopulateQuery += `'${team.city}', `;
-                        nbaTeamsPopulateQuery += `'${team.altCityName}', `;
-                        nbaTeamsPopulateQuery += `'${team.fullName}', `;
-                        nbaTeamsPopulateQuery += `'${team.tricode}', `;
-                        nbaTeamsPopulateQuery += `${team.teamId}, `;
-                        nbaTeamsPopulateQuery += `'${team.nickname}', `;
-                        nbaTeamsPopulateQuery += `'${team.urlName}', `;
-                        nbaTeamsPopulateQuery += `'${team.confName}', `;
-                        nbaTeamsPopulateQuery += `'${team.divName}'`;
-                        nbaTeamsPopulateQuery += `); `;
-                    });
-                    //END
-
-
-                    //START
-                    connection.query(`${nbaTeamsPopulateQuery}`, (error, result, fields) => {
-                        if (!error) {
-                            resolve(result);
+                    _.each(teamColumnNames, (columnName) => {
+                        if (columnName === nbaTeamsTableLastColumnName) {
+                            nbaTeamsPopulateQuery += `${columnName}`;
+                            nbaTeamsPopulateQuery += `) VALUES (`;
                         }
                         else {
-                            reject(error);
+                            nbaTeamsPopulateQuery += `${columnName}, `;
                         }
                     });
-                    //END
-                }
-            });
+
+                    nbaTeamsPopulateQuery += `${team.isNBAFranchise}, `;
+                    nbaTeamsPopulateQuery += `${team.isAllStar}, `;
+                    nbaTeamsPopulateQuery += `'${team.city}', `;
+                    nbaTeamsPopulateQuery += `'${team.altCityName}', `;
+                    nbaTeamsPopulateQuery += `'${team.fullName}', `;
+                    nbaTeamsPopulateQuery += `'${team.tricode}', `;
+                    nbaTeamsPopulateQuery += `${team.teamId}, `;
+                    nbaTeamsPopulateQuery += `'${team.nickname}', `;
+                    nbaTeamsPopulateQuery += `'${team.urlName}', `;
+                    nbaTeamsPopulateQuery += `'${team.confName}', `;
+                    nbaTeamsPopulateQuery += `'${team.divName}'`;
+                    nbaTeamsPopulateQuery += `); `;
+                });
+                //END
+
+
+                //START
+                connection.query(`${nbaTeamsPopulateQuery}`, (error, result, fields) => {
+                    if (!error) {
+                        resolve(result);
+                    }
+                    else {
+                        reject(error);
+                    }
+                });
+                //END
+            }
+        });
     });
 }
 
