@@ -41,34 +41,75 @@ body {
     padding: 2em 0em 2em 0em;
     border: .75px solid black;
   }
+
   .game {
     //background-color:#C9082A;
-    height: 150px;
+    height: 215px;
     border: .75px solid black;
+
+    //Top
     .game-top-section {
-      width: 100%;
       text-align: center;
-      margin: 0em 0em .7em 0em;
-
-      p {
-        font-size: 22px;
-      }
-      .game-team-logo {
-        display: inline-block;
-      }
-
-      .game-team-score {
-        display: inline-block;
-      }
-    }
-
-    .game-mid-section {
-      text-align: center;
+      margin: 1em 0em 0em 0em;
 
       p {
         font-size: 14px;
       }
+
+      #game-team-tricode {
+        display: inline-block;
+        margin: 0em 4.5em 0em 4.5em;
+        color: white;                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+      }
     }
+    //End Top
+
+    //Middle
+    .game-mid-section {
+      width: 100%;
+      text-align: center;
+      margin: 0em 0em .7em 0em;
+
+      .game-team-logo {
+        margin: 1em 1em 0em 1em;
+        display: inline-block;
+      }
+
+      .game-clock {
+        font-size: 14px;
+        font-weight: 900;
+        display: inline-block;
+        color: gold;
+      }
+    }
+    //End Middle
+
+   
+
+    //Bottom
+    .game-bot-section {
+      margin: 2em 0em 0em 0em;
+      text-align: center;
+
+      .game-team-score {
+        display: inline-block;
+        margin: 0em 1em 0em 1em;
+        font-weight: 900;
+        font-size: 20px;
+        color: gold;
+      }
+
+      #game-start-time {
+        font-size: 12px;
+        margin: 1em 0em 0em 0em;
+      }
+
+      #game-nugget-text {
+        margin: 1em 0em 0em 0em;
+      }
+    }
+
+    //End Bottom
   }
 
   

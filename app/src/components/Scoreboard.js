@@ -36,16 +36,23 @@ class ScoreBoard extends React.Component{
                     gameDetailElements.push(
                         <Col xs={6} className={"game"} key={key}>
                             <div className={"game-top-section"}>
-                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.hTeam.triCode}.png`)} width="15%" height="15%"/>
-                                <p className={"game-team-score"}>{score.hTeam.score} - {score.vTeam.score}</p>
-                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.vTeam.triCode}.png`)} width="15%" height="15%" />
+                                <p id={"game-team-tricode"}>{score.vTeam.win}-{score.vTeam.loss}</p>
+                                <p id={"game-team-tricode"}>{score.hTeam.win}-{score.hTeam.loss}</p>
                             </div>
 
                             <div className={"game-mid-section"}>
-                                <p id={"game-clock"}>{score.clock === "" ? "00:00" : score.clock}</p>
-                                <p id={"game-team-tricode"}>{score.hTeam.triCode} {score.hTeam.win}-{score.hTeam.loss} - {score.vTeam.triCode} {score.vTeam.win}-{score.vTeam.loss}</p>
-                                <p className={"game-start-time"}>{score.startTimeEastern}</p>
-                                
+                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.vTeam.triCode}.png`)} width="15%" height="15%" />
+                                <p className={"game-clock"}>Q{score.period.current} - {score.clock === "" ? "00:00" : score.clock}</p>
+                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.hTeam.triCode}.png`)} width="15%" height="15%" />
+                            </div>
+
+                            
+
+                            <div className={"game-bot-section"}>
+                                <p className={"game-team-score"}>{score.vTeam.triCode}-{score.vTeam.score}</p>
+                                <p className={"game-team-score"}>{score.hTeam.triCode}-{score.hTeam.score}</p>
+                                <p id={"game-start-time"}>{score.startTimeEastern}</p>
+                                {/*<p id={"game-nugget-text"}>{score.nugget.text}</p> */}
                             </div>
                         </Col>
                     )
