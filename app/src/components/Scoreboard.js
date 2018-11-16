@@ -36,17 +36,22 @@ class ScoreBoard extends React.Component{
                     gameDetailElements.push(
                         <Col xs={6} className={"game"} key={key}>
                             <div className={"game-top-section"}>
-                                <p id={"game-team-tricode"}>{score.vTeam.win}-{score.vTeam.loss}</p>
-                                <p id={"game-team-tricode"}>{score.hTeam.win}-{score.hTeam.loss}</p>
-                            </div>
 
-                            <div className={"game-mid-section"}>
-                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.vTeam.triCode}.png`)} width="15%" height="15%" />
-                                <p className={"game-clock"}>Q{score.period.current} - {score.clock === "" ? "00:00" : score.clock}</p>
-                                <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.hTeam.triCode}.png`)} width="15%" height="15%" />
-                            </div>
+                                <div className={"game-team-scoreboard"}>
+                                    <p className={"game-team-win-lose"}>{score.vTeam.win}-{score.vTeam.loss}</p>
+                                    <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.vTeam.triCode}.png`)} />
+                                </div>
 
-                            
+                                <div className={"game-team-scoreboard"}>
+                                    <span id={score.isGameActivated ? "game-status-on" : "game-status-off"}> &nbsp; </span>
+                                    <p className={"game-clock"}>Q{score.period.current} - {score.clock === "" ? "00:00" : score.clock}</p>
+                                </div>
+
+                                <div className={"game-team-scoreboard"}>
+                                    <p className={"game-team-win-lose"}>{score.hTeam.win}-{score.hTeam.loss}</p>
+                                    <img className={"game-team-logo"} src={require(`../images/nba-logos/${score.hTeam.triCode}.png`)} />
+                                </div>
+                            </div>
 
                             <div className={"game-bot-section"}>
                                 <p className={"game-team-score"}>{score.vTeam.triCode}-{score.vTeam.score}</p>

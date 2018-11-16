@@ -5,7 +5,8 @@
 body {
   background-color: $primary-color;
   font-size: 13px;
-  background-color: #17408b;
+  //background-color: #17408b;
+  background-color: white;
   font-family: "Monda", sans-serif;
 }
 
@@ -34,7 +35,8 @@ body {
 
 .nba-game-container {
   color: white;
-
+  background-color: #17408b;
+  
   .game-welcome {
     font-size: 24px;
     text-align: center;
@@ -49,42 +51,50 @@ body {
 
     //Top
     .game-top-section {
-      text-align: center;
+      height: 120px;
       margin: 1em 0em 0em 0em;
-
-      p {
-        font-size: 14px;
-      }
-
-      #game-team-tricode {
+      text-align: center;
+      
+      .game-team-scoreboard {
         display: inline-block;
-        margin: 0em 4.5em 0em 4.5em;
-        color: white;                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        width: 33%;
+
+        .game-team-win-lose {
+          font-size: 16px;
+          padding: .2em 0em .2em 0em;
+        }
+
+        .game-team-logo {
+          width: 100px;
+          height: 100px;
+          //height: auto;
+        }
+
+        .game-clock {
+          display: inline;
+          font-size: 16px;
+        }
+
+        #game-status-on {
+          display: inline;
+          border: 1px solid black;
+          border-radius: 1em;
+          background-color: green;
+
+          margin: 0em .5em 0em .5em;
+        }
+
+        #game-status-off {
+          display: inline;
+          margin: 0em .5em 0em .5em;
+          border: 1px solid black;
+          border-radius: 1em;
+          background-color: red;
+
+        }
       }
     }
     //End Top
-
-    //Middle
-    .game-mid-section {
-      width: 100%;
-      text-align: center;
-      margin: 0em 0em .7em 0em;
-
-      .game-team-logo {
-        margin: 1em 1em 0em 1em;
-        display: inline-block;
-      }
-
-      .game-clock {
-        font-size: 14px;
-        font-weight: 900;
-        display: inline-block;
-        color: gold;
-      }
-    }
-    //End Middle
-
-   
 
     //Bottom
     .game-bot-section {
@@ -108,7 +118,6 @@ body {
         margin: 1em 0em 0em 0em;
       }
     }
-
     //End Bottom
   }
 
@@ -117,8 +126,36 @@ body {
 
 .nba-teams {
   color: white;
+  background-color: #17408b;
+  height: auto;
 
-  p {
-    padding: .5em 0em .5em 0em;
+  .team-box {
+    height: 120px;
+    border: 1px solid black;
+    padding-left: 1em;
+    
+    .team-logo-name {
+      display: inline-block;
+
+      p {
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        margin: .2em 0em .5em 0em;
+        text-decoration: underline;
+      }
+
+      img {
+        height: 75px;
+        width: 75px;
+      }
+    }
+    
+    .team-info {
+      display: inline-block;
+
+
+    }
+    
   }
 }

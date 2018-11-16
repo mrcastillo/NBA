@@ -13,25 +13,29 @@ class App extends Component {
     super(props);
   }
 
+
+  componentDidMount() {
+    
+  }
+
+  getScoreboard() {
+    var url = `http://localhost:8181/scoreboard`;
+
+    axios.get(url)
+    .then((scoreboard) => {
+      scoreboard = scoreboard.data;
+      
+      this.setState({})
+    })
+  }
+
   render() {
     return (
       <Grid className={"app-layout"}>
 
-        {/*
-        <Row className={"top-header"}>
-          <Col xs={12}>
-            <h1>NBA API</h1>
-            <h3>NBA Data - Development</h3>
-          </Col>
-        </Row>
-        */}
-        { /*
-          <Scoreboard />
-          
-        */}
         <Scoreboard />
-        <hr />
         <Teams />
+
       </Grid>
     );
   }

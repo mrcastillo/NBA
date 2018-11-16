@@ -40,7 +40,7 @@ export class NBAteams{
                 const nbaTeams = teams.data;
                 console.log(nbaTeams);
                 
-                this.db("nba_teams")
+                this.db(tableName)
                 .insert(nbaTeams)
                 .then((result) => {
                     console.log(result)
@@ -88,7 +88,7 @@ export class NBAteams{
         });
     }
 
-    getNBATeamByID(id) {
+    getNBATeamId(id) {
         return new Promise((resolve, reject) => {
             this.db(tableName)
             .where({"teamId" : id})
@@ -113,4 +113,6 @@ export class NBAteams{
             })
         });
     };
+
+    
 } 

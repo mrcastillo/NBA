@@ -15,7 +15,9 @@ var _lodash = _interopRequireDefault(require("lodash"));
 
 var _requestPromise = _interopRequireDefault(require("request-promise"));
 
-var _NBATeams = require("./NBATeams");
+var _NBATeams = require("./db_helpers/NBATeams");
+
+var _NBAStandings = require("./db_helpers/NBAStandings");
 
 //import { createNBATeamsTable, populateNBATeamsTable} from "./NBATeams";
 //import Report from "./models/report";
@@ -24,11 +26,26 @@ var currentDate = new Date();
 var time = require("../lib/functions/time");
 
 console.log(time.yyyymmdd());
+var nbaDataUri = "data.nba.net";
 var allNBATeams = [];
 var activatedGames = [];
+var nbaToday = {
+  uri: "http://data.nba.net/10s/prod/v1/today.json",
+  headers: {
+    'User-Agent': "Request-Promise"
+  },
+  json: true
+};
+var nbaCalendar = {
+  uri: "https://data.nba.net/prod/v1/calendar.json",
+  headers: {
+    'User-Agent': 'Request-Promise'
+  },
+  json: true
+};
 var scoreBoard = {
-  //uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
-  uri: "https://data.nba.net/10s/prod/v1/20181109/scoreboard.json",
+  uri: "https://data.nba.net/10s/prod/v1/".concat(time.yyyymmdd(), "/scoreboard.json"),
+  //uri: `https://data.nba.net/10s/prod/v1/20181109/scoreboard.json`,
   headers: {
     'User-Agent': "Request-Promise"
   },
@@ -76,6 +93,13 @@ var divisionStandings = {
   },
   json: true
 };
+var nbastandingsuri = {
+  uri: "http://data.nba.net/prod/v1/current/standings_all_no_sort_keys.json",
+  headers: {
+    "User-Agent": "Request-Promise"
+  },
+  json: true
+};
 var teamstatleaders = {
   uri: "http://data.nba.net/prod/v1/2018/team_stats_rankings.json",
   headers: {
@@ -108,9 +132,46 @@ function () {
       var app = this.app;
       var db = app.get("db");
       var nbaTeams = new _NBATeams.NBAteams(db);
-      app.get("/test", function (req, res) {
-        nbaTeams.createAndPopulateNBATeams();
-        res.end();
+      var nbaStandings = new _NBAStandings.Standings(db);
+      app.get("/getTeamStandings/:teamId", function (req, res) {
+        var teamId = req.params.teamId;
+        console.log("teamId");
+        var selectRows = ["fullName", "tricode", "nickname", "urlName", "confName", "divName", "city", "win", "loss", "winPct", "lossPct", "gamesBehind", "confRank", "confWin", "confLoss", "homeWin", "homeLoss", "lastTenWin", "lastTenLoss", "streak", "divRank", "isWinStreak"];
+        db.select(selectRows).from("nba_standings").innerJoin('nba_teams', "nba_teams.teamId", "nba_standings.teamId").then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
+      });
+      app.get("/getTeamStandings", function (req, res) {
+        var selectRows = ["fullName", "tricode", "nickname", "urlName", "confName", "divName", "city", "win", "loss", "winPct", "lossPct", "gamesBehind", "confRank", "confWin", "confLoss", "homeWin", "homeLoss", "lastTenWin", "lastTenLoss", "streak", "divRank", "isWinStreak"];
+        db.select(selectRows).from("nba_standings").innerJoin('nba_teams', "nba_teams.teamId", "nba_standings.teamId").then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
+      });
+      app.get("/populateNBAStandings", function (req, res) {
+        nbaStandings.populateNBAStandings().then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
+      });
+      app.post("/createNBAStandingsTable", function (req, res) {
+        nbaStandings.createNBAStandingsTable().then(function (result) {
+          res.send(result);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
+          res.end();
+        });
       });
       app.post("/getNBATeam", function (req, res) {
         nbaTeams.getNBATeamByName("knicks").then(function (team) {
@@ -122,8 +183,11 @@ function () {
         });
       });
       app.post("/getNBATeamId", function (req, res) {
-        nbaTeams.getIDByTeamName("knicks").then(function (team) {
+        nbaTeams.getIDByTeamName("1610612752").then(function (team) {
           res.send(team);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
           res.end();
         });
       }); //Returns today's scoreboard
@@ -205,10 +269,14 @@ function () {
           };
 
           _lodash.default.each(standingsEast, function (team) {
+            //Delete key as not needed and causes issues
+            delete team.sortKey;
             standings.eastStandings.push(team);
           });
 
           _lodash.default.each(standingsWest, function (team) {
+            //Delete key as not needed and causes issues
+            delete team.sortKey;
             standings.westStandings.push(team);
           });
 
@@ -226,6 +294,16 @@ function () {
           res.end();
         }).catch(function (err) {
           res.send("There was an error with the nba division standing routes... \n ".concat(err));
+          res.end();
+        });
+      });
+      app.get("/nbastandings", function (req, res) {
+        (0, _requestPromise.default)(nbastandingsuri).then(function (standings) {
+          standings = standings.league.standard.teams;
+          res.send(standings);
+          res.end();
+        }).catch(function (err) {
+          res.send(err);
           res.end();
         });
       });
