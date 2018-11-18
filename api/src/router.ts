@@ -1,19 +1,41 @@
 import path from "path";
 import _ from "lodash";
 import rp from "request-promise";
-import { nbaTeams } from "./entities/nbaTeams";
 
+//import { createNBATeamsTable, populateNBATeamsTable} from "./NBATeams";
+
+import { NBAteams } from "./db_helpers/NBATeams";
+import { Standings } from "./db_helpers/NBAStandings";
 
 //import Report from "./models/report";
 const currentDate = new Date();
 const time = require("../lib/functions/time");
 console.log(time.yyyymmdd());
 
+const nbaDataUri = "data.nba.net";
+
 var allNBATeams = [];
 var activatedGames = [];
 
+var nbaToday = {
+    uri: `http://data.nba.net/10s/prod/v1/today.json`,
+    headers: {
+        'User-Agent': "Request-Promise"
+    },
+    json: true
+}
+
+const nbaCalendar = {
+    uri: `https://data.nba.net/prod/v1/calendar.json`,
+    headers: {
+        'User-Agent': 'Request-Promise'
+    },
+    json: true
+}
+
 var scoreBoard = {
     uri: `https://data.nba.net/10s/prod/v1/${time.yyyymmdd()}/scoreboard.json`,
+    //uri: `https://data.nba.net/10s/prod/v1/20181109/scoreboard.json`,
     headers: {
         'User-Agent': "Request-Promise"
     },
@@ -68,6 +90,13 @@ var divisionStandings = {
     json: true
 }
 
+var nbastandingsuri = {
+    uri: `http://data.nba.net/prod/v1/current/standings_all_no_sort_keys.json`,
+    headers: {
+        "User-Agent": "Request-Promise"
+    },
+    json: true
+}
 var teamstatleaders = {
     uri: `http://data.nba.net/prod/v1/2018/team_stats_rankings.json`,
     headers: {
@@ -95,6 +124,140 @@ class AppRouter{
     setupRouters(){
         const app = this.app;
         const db = app.get("db");
+        
+        var nbaTeams = new NBAteams(db);
+        var nbaStandings = new Standings(db);
+
+        app.get("/getTeamStandings/:teamId", (req, res) => {
+
+            const teamId = req.params.teamId;
+            console.log("teamId");
+
+            const selectRows = [
+                "fullName",
+                "tricode",
+                "nickname",
+                "urlName",
+                "confName",
+                "divName",
+                "city",
+                "win",
+                "loss",
+                "winPct",
+                "lossPct",
+                "gamesBehind",
+                "confRank",
+                "confWin",
+                "confLoss",
+                "homeWin",
+                "homeLoss",
+                "lastTenWin",
+                "lastTenLoss",
+                "streak",
+                "divRank",
+                "isWinStreak"
+            ];
+
+            db.select(selectRows)
+                .from("nba_standings")
+                .innerJoin('nba_teams', "nba_teams.teamId", "nba_standings.teamId")
+                .then((result) => {
+                    res.send(result);
+                    res.end();
+                })
+                .catch((err) => {
+                    res.send(err);
+                    res.end();
+                });
+        });
+
+        app.get("/getTeamStandings", (req, res) => {
+            const selectRows = [
+                "fullName",
+                "tricode",
+                "nickname",
+                "urlName",
+                "confName",
+                "divName",
+                "city",
+                "win",
+                "loss",
+                "winPct",
+                "lossPct",
+                "gamesBehind",
+                "confRank",
+                "confWin",
+                "confLoss",
+                "homeWin",
+                "homeLoss",
+                "lastTenWin",
+                "lastTenLoss",
+                "streak",
+                "divRank",
+                "isWinStreak"
+            ];
+
+            db.select(selectRows)
+                .from("nba_standings")
+                .innerJoin('nba_teams', "nba_teams.teamId", "nba_standings.teamId")
+                .then((result) => {
+                res.send(result);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            });
+        });
+
+        app.get("/populateNBAStandings", (req, res) => {
+            nbaStandings.populateNBAStandings()
+            .then((result) => {
+                res.send(result);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            });
+        });
+
+        app.post("/createNBAStandingsTable", (req, res) => {
+            nbaStandings.createNBAStandingsTable()
+            .then((result) => {
+                res.send(result);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            })
+        });
+
+        app.post("/getNBATeam", (req, res) => {
+            nbaTeams.getNBATeamByName("knicks")
+            .then((team) => {
+                res.send(team);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            })
+        });
+        
+        app.post("/getNBATeamId" , (req, res) => {
+            nbaTeams.getIDByTeamName("1610612752")
+            .then((team) => {
+                res.send(team);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            })
+        });
+
 
         //Returns today's scoreboard
         app.get("/scoreboard", (req, res) => {
@@ -196,10 +359,16 @@ class AppRouter{
                 }
 
                 _.each(standingsEast, (team) => {
+                    //Delete key as not needed and causes issues
+                    delete team.sortKey;
+
                     standings.eastStandings.push(team);
                 });
 
                 _.each(standingsWest, (team) => {
+                    //Delete key as not needed and causes issues
+                    delete team.sortKey;
+
                     standings.westStandings.push(team);
                 });
 
@@ -226,6 +395,21 @@ class AppRouter{
             })
         });
 
+        app.get("/nbastandings", (req, res) => {
+
+            rp(nbastandingsuri)
+            .then((standings) => {
+                standings = standings.league.standard.teams;
+
+                res.send(standings);
+                res.end();
+            })
+            .catch((err) => {
+                res.send(err);
+                res.end();
+            });
+        })
+
         app.get("/teamstatleaders", (req, res) => {
             rp(teamstatleaders)
             .then((teamstatleaders) => {
@@ -250,7 +434,9 @@ class AppRouter{
                 res.send(`There was an error with the nba last five game team stats routes... \n ${err}`);
                 res.end();
             })
-        }); 
+        });
+
+
     }
 }
 

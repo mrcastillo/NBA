@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import _ from "lodash";
-
+import { Row, Col} from "react-bootstrap";
+ 
 class Teams extends React.Component{
     constructor(props){
         super(props);
@@ -28,7 +29,17 @@ class Teams extends React.Component{
 
             _.each(teams, (team, key) => {
                 element.push(
-                    <p key={key}>{team.fullName}</p>
+                    <div className={"team-box"}>
+                        <div className={"team-logo-name"}>
+                            <p key={key}>{team.fullName}</p>
+                            <img src={require(`../images/nba-logos/${team.tricode}.png`)} />
+                        </div>
+                        
+                        <div className={"team-info"}>
+                            <p>Hello</p>
+                        </div>
+
+                    </div>
                 )
                 console.log(team)
             });
@@ -40,9 +51,11 @@ class Teams extends React.Component{
     }
     render(){
         return(
-            <div className={"nba-teams"}>
-                {this.state.teams}
-            </div>
+            <Row>
+                <Col xs={12} className={"nba-teams"}>
+                    {this.state.teams}
+                </Col>
+            </Row>
         )
     }
 }

@@ -415,10 +415,13 @@ module.exports = {
   	allstars = allstars.roster.players;
   	allstar_teams = allstars.roster.teams;
   	allstar_game_date = allstars.sportsContent.sportsMeta.seasonMeta.calendarDate;
-  		var nba_allstars = [];
-  		for(var i = 0; i < allstars.length; i++){
+  
+  	var nba_allstars = [];
+  
+  	for(var i = 0; i < allstars.length; i++){
   		var allstar_player = {
-  			}
+  
+  		}
   	}
   }
   */

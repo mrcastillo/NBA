@@ -6,29 +6,37 @@ import './css/index.css';
 
 import Scoreboard from "./components/Scoreboard";
 import Teams from "./components/Teams";
+import { Grid, Row, Col } from "react-bootstrap";
 
 class App extends Component {
   constructor(props){
     super(props);
   }
 
+
+  componentDidMount() {
+    
+  }
+
+  getScoreboard() {
+    var url = `http://localhost:8181/scoreboard`;
+
+    axios.get(url)
+    .then((scoreboard) => {
+      scoreboard = scoreboard.data;
+      
+      this.setState({})
+    })
+  }
+
   render() {
     return (
-      <div className={"app-layout"}>
+      <Grid className={"app-layout"}>
 
-        <div className={"top-header"}>
-          <h1>NBA API</h1>
-          <h3>NBA Data - Development</h3>
-        </div>
-
-        { /*
-          <Scoreboard />
-          
-        */}
         <Scoreboard />
-        <hr />
         <Teams />
-      </div>
+
+      </Grid>
     );
   }
 }

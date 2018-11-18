@@ -2,6 +2,11 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _http = _interopRequireDefault(require("http"));
 
 var _express = _interopRequireDefault(require("express"));
@@ -18,9 +23,10 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _router = _interopRequireDefault(require("./router"));
 
-var _database = require("./database");
+//import { connect } from "./database";
+var knex = require('./knex/knex.js'); //file storage config
 
-//file storage config
+
 var storageDir = _path.default.join(__dirname, "..", "storage");
 
 var storage = _multer.default.diskStorage({
@@ -47,22 +53,35 @@ app.use(_bodyParser.default.json({
 }));
 app.set("root", __dirname);
 app.set("storageDir", storageDir);
-/*
-new AppRouter(app);
-
-app.server.listen(process.env.PORT || PORT, function() {
-    console.log("App is running on port " + app.server.address().port);
-    console.log(`Database has started`);
+app.db = knex;
+app.set("db", knex);
+new _router.default(app);
+app.server.listen(process.env.PORT || PORT, function () {
+  console.log("App is running on port " + app.server.address().port);
 });
+/*
+connect((connection) => {
+    //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
+    app.db = connection;
+    app.set("db", connection);
+
+    connection.query("SELECT * from nba_teams", (err, teams) => {
+        if(err){
+            console.error(`Error setting nba_teams obj. Maybe run createNBATeamsTable script or create nba_teams table.\n` + err);
+        };
+        //This object will alwyas return our NBAteams.
+        app.nbaTeams = teams;
+        app.set("nbaTeams", teams);
+
+        //init router
+        new AppRouter(app);
+        
+        app.server.listen(process.env.PORT || PORT, function () {
+            console.log("App is running on port " + app.server.address().port);
+        });
+    });
+})
 */
 
-(0, _database.connect)(function (connection) {
-  //Sets the database in our application, we initialize our router with (app) so that we can acccess this.
-  app.db = connection;
-  app.set("db", connection); //init router
-
-  new _router.default(app);
-  app.server.listen(process.env.PORT || PORT, function () {
-    console.log("App is running on port " + app.server.address().port);
-  });
-});
+var _default = app;
+exports.default = _default;
